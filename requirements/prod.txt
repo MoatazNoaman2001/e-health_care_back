@@ -1,0 +1,8 @@
+-r base.txt
+
+# Security
+django-defender==0.9.7
+django-axes==6.0.5
+
+# Monitoring
+sentry-sdk==1.28.1

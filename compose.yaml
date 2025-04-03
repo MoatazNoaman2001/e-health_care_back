@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn healthcare_project.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_DB=${DATABASE_NAME}
+    restart: always
+
+  redis:
+    image: redis:6
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  celery:
+    build: .
+    command: celery -A healthcare_project worker -l INFO
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - web
+    restart: always
+
+  celery-beat:
+    build: .
+    command: celery -A healthcare_project beat -l INFO
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - web
+    restart: always
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
