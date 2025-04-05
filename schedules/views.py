@@ -3,10 +3,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
-from ..doctors.models import Doctor
-from ..clinics.models import Clinic
-from ..accounts.permissions import IsDoctorUser, IsAdminUser
-from ..common.permissions import IsOwner
+from healthcare_project.doctors.models import Doctor
+from healthcare_project.clinics.models import Clinic
+from healthcare_project.accounts.permissions import IsDoctorUser, IsAdminUser
+from healthcare_project.common.permissions import IsOwner
 from .models import Schedule, ScheduleException, TimeSlot, AvailabilityPreference
 from .serializers import (
     ScheduleSerializer, ScheduleDetailSerializer,

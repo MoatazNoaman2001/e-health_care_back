@@ -1,6 +1,5 @@
 from celery import shared_task
 from django.utils import timezone
-from django.conf import settings
 from .models import Appointment, AppointmentReminder
 
 
@@ -126,7 +125,7 @@ def send_sms_reminder(appointment):
 
     # Send the SMS
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    client.chat_messages.create(
+    client.messages.create(
         body=message,
         from_=settings.TWILIO_PHONE_NUMBER,
         to=patient_phone
@@ -173,7 +172,7 @@ def send_push_reminder(appointment):
 
     # Send the notification
     response = messaging.send_multicast(message)
-    print(f"{response.success_count} chat_messages were sent successfully")
+    print(f"{response.success_count} messages were sent successfully")
     """
 
 

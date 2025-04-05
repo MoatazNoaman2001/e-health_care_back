@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from ..accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
-from ..common.permissions import IsOwner
+from healthcare_project.accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
+from healthcare_project.common.permissions import IsOwner
 from .models import Patient, PatientAddress, MedicalHistory, Medication, FamilyMedicalHistory
 from .serializers import (
     PatientSerializer, PatientDetailSerializer, PatientRegistrationSerializer,

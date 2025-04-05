@@ -2,7 +2,6 @@ import uuid
 import os
 from datetime import timedelta
 from django.utils import timezone
-from django.conf import settings
 
 
 def get_file_path(instance, filename):

@@ -16,6 +16,8 @@ services:
       - db
       - redis
     restart: always
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.base
 
   db:
     image: postgres:13

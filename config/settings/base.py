@@ -23,7 +23,7 @@ DJANGO_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.chat_messages',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
 
@@ -44,7 +44,6 @@ LOCAL_APPS = [
     'schedules',
     'reviews',
     'notifications',
-    'chat_messages',
     'api',
     'common',
 ]
@@ -57,8 +56,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.chat_messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -74,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.chat_messages.context_processors.chat_messages',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -87,11 +86,11 @@ ASGI_APPLICATION = 'healthcare_project.asgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DATABASE_NAME', default='healthcare_db'),
-        'USER': env('DATABASE_USER', default='postgres'),
-        'PASSWORD': env('DATABASE_PASSWORD', default='postgres'),
-        'HOST': env('DATABASE_HOST', default='localhost'),
-        'PORT': env('DATABASE_PORT', default='5432'),
+        'NAME': os.environ.get('DATABASE_NAME', 'healthcare_db'),
+        'USER': os.environ.get('DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DATABASE_HOST', 'db'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
 }
 

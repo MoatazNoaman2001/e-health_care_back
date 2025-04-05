@@ -3,9 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg
-from ..accounts.permissions import IsDoctorUser, IsAdminUser
-from ..common.permissions import IsOwner
-from ..doctors.models import Doctor
+from healthcare_project.accounts.permissions import IsDoctorUser, IsAdminUser
+from healthcare_project.common.permissions import IsOwner
+from healthcare_project.doctors.models import Doctor
 from .models import (
     Clinic, ClinicGallery, DoctorClinic, ClinicBusinessHours,
     ClinicSpecialty, ClinicInsurance, ClinicReview

@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from ..common.models import TimeStampedModel, Address
-from ..accounts.models import User
-from ..common.validators import validate_phone_number
+from common.models import TimeStampedModel, Address
+from accounts.models import User
+from common.validators import validate_phone_number
 
 
 class Patient(TimeStampedModel):

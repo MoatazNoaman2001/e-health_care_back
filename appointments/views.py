@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
-from ..accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
-from ..common.permissions import IsOwner
+from healthcare_project.accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
+from healthcare_project.common.permissions import IsOwner
 from .models import (
     Appointment, AppointmentDocument, MedicalRecord,
     AppointmentReminder, AppointmentFeedback
