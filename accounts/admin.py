@@ -12,9 +12,7 @@ class UserPreferenceInline(admin.StackedInline):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    """
-    Custom UserAdmin for our custom User model.
-    """
+
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone_number', 'profile_image')}),
