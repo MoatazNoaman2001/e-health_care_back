@@ -6,10 +6,6 @@ from clinics.models import Clinic
 
 
 class Schedule(TimeStampedModel):
-    """
-    Model representing a doctor's schedule at a clinic.
-    """
-
     class DayOfWeek(models.IntegerChoices):
         MONDAY = 0, _('Monday')
         TUESDAY = 1, _('Tuesday')

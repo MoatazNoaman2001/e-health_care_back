@@ -36,33 +36,6 @@ services:
     volumes:
       - redis_data:/data
     restart: always
-
-  celery:
-    build: .
-    command: celery -A healthcare_project worker -l INFO
-    volumes:
-      - .:/app
-    env_file:
-      - ./.env
-    depends_on:
-      - db
-      - redis
-      - web
-    restart: always
-
-  celery-beat:
-    build: .
-    command: celery -A healthcare_project beat -l INFO
-    volumes:
-      - .:/app
-    env_file:
-      - ./.env
-    depends_on:
-      - db
-      - redis
-      - web
-    restart: always
-
   nginx:
     build: ./nginx
     volumes:
