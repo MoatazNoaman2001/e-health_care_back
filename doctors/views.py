@@ -2,8 +2,8 @@ from rest_framework import viewsets, permissions, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from healthcare_project.accounts.permissions import IsDoctorUser, IsAdminUser
-from healthcare_project.common.permissions import IsOwner
+from accounts.permissions import IsDoctorUser, IsAdminUser
+from common.permissions import IsOwner
 from .models import (
     Doctor, Specialization, DoctorEducation, DoctorWorkExperience,
     DoctorCertification, InsuranceProvider, DoctorInsurance
@@ -15,7 +15,6 @@ from .serializers import (
     InsuranceProviderSerializer, DoctorInsuranceSerializer
 )
 from .filters import DoctorFilter
-import serializers
 
 
 class SpecializationViewSet(viewsets.ModelViewSet):

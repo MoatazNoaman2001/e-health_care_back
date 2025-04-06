@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
-from healthcare_project.accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
-from healthcare_project.common.permissions import IsOwner
+from accounts.permissions import IsPatientUser, IsDoctorUser, IsAdminUser
+from common.permissions import IsOwner
 from .models import (
     Appointment, AppointmentDocument, MedicalRecord,
     AppointmentReminder, AppointmentFeedback
@@ -17,7 +17,6 @@ from .serializers import (
 )
 from .filters import AppointmentFilter
 from .services import create_appointment_reminders, send_appointment_confirmation
-import serializers
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):

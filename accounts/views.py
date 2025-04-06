@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from healthcare_project.common.permissions import IsOwner, IsAdmin
-from healthcare_project.common.utils import generate_random_code, get_future_date
+from common.permissions import IsOwner, IsAdmin
+from common.utils import generate_random_code, get_future_date
 from .models import User, UserPreference, EmailVerification, PhoneVerification
 from .serializers import (
     UserSerializer, UserRegistrationSerializer, UserPreferenceSerializer,

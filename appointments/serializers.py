@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from ..patients.serializers import PatientSerializer
-from ..doctors.serializers import DoctorSerializer
-from ..clinics.serializers import ClinicSerializer
-from ..accounts.serializers import UserSerializer
+from patients.serializers import PatientSerializer
+from doctors.serializers import DoctorSerializer
+from clinics.serializers import ClinicSerializer
+from accounts.serializers import UserSerializer
 from .models import (
     Appointment, AppointmentDocument, MedicalRecord,
     AppointmentReminder, AppointmentFeedback

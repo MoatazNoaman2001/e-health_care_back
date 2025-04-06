@@ -1,10 +1,11 @@
 from rest_framework import serializers
-from ..doctors.serializers import DoctorSerializer, InsuranceProviderSerializer
-from ..accounts.serializers import UserSerializer
+from doctors.serializers import DoctorSerializer, InsuranceProviderSerializer
+from accounts.serializers import UserSerializer
 from .models import (
     Clinic, ClinicGallery, DoctorClinic, ClinicBusinessHours,
     ClinicSpecialty, ClinicInsurance, ClinicReview
 )
+from doctors.models import InsuranceProvider, Doctor
 
 
 class ClinicGallerySerializer(serializers.ModelSerializer):
@@ -48,7 +49,7 @@ class ClinicInsuranceSerializer(serializers.ModelSerializer):
     insurance = InsuranceProviderSerializer(read_only=True)
     insurance_id = serializers.PrimaryKeyRelatedField(
         source='insurance',
-        queryset=serializers.CurrentValueDefault('doctors.InsuranceProvider'),
+        queryset=InsuranceProvider.objects.all(),
         write_only=True
     )
 
@@ -77,7 +78,7 @@ class DoctorClinicSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
     doctor_id = serializers.PrimaryKeyRelatedField(
         source='doctor',
-        queryset=serializers.CurrentValueDefault('doctors.Doctor'),
+        queryset=Doctor.objects.all(),
         write_only=True
     )
 

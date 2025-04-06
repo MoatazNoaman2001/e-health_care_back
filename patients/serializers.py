@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..accounts.serializers import UserSerializer
+from accounts.serializers import UserSerializer
 from .models import Patient, PatientAddress, MedicalHistory, Medication, FamilyMedicalHistory
 
 

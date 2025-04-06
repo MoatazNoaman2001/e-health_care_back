@@ -2,26 +2,26 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested import routers
 
-from ...accounts.views import UserViewSet
-from ...patients.views import (
+from accounts.views import UserViewSet
+from patients.views import (
     PatientViewSet, PatientAddressViewSet, MedicalHistoryViewSet,
     MedicationViewSet, FamilyMedicalHistoryViewSet
 )
-from ...doctors.views import (
+from doctors.views import (
     DoctorViewSet, SpecializationViewSet, DoctorEducationViewSet,
     DoctorWorkExperienceViewSet, DoctorCertificationViewSet,
     InsuranceProviderViewSet
 )
-from ...clinics.views import (
+from clinics.views import (
     ClinicViewSet, ClinicGalleryViewSet, ClinicBusinessHoursViewSet,
     ClinicSpecialtyViewSet, ClinicReviewViewSet
 )
-from ...appointments.views import (
+from appointments.views import (
     AppointmentViewSet, AppointmentDocumentViewSet,
     MedicalRecordViewSet, AppointmentFeedbackViewSet,
     AppointmentReminderViewSet
 )
-from ...schedules.views import (
+from schedules.views import (
     ScheduleViewSet, ScheduleExceptionViewSet, TimeSlotViewSet,
     AvailabilityPreferenceViewSet
 )

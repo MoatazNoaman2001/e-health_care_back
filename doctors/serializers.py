@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..accounts.serializers import UserSerializer
+from accounts.serializers import UserSerializer
 from .models import (
     Doctor, Specialization, DoctorEducation, DoctorWorkExperience,
     DoctorCertification, InsuranceProvider, DoctorInsurance

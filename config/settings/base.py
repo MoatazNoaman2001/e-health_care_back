@@ -84,16 +84,16 @@ WSGI_APPLICATION = 'healthcare_project.wsgi.application'
 ASGI_APPLICATION = 'healthcare_project.asgi.application'
 
 # Database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('DATABASE_NAME', 'healthcare_db'),
-#         'USER': os.environ.get('DATABASE_USER', 'postgres'),
-#         'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
-#         'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
-#         'PORT': os.environ.get('DATABASE_PORT', '5432'),
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DATABASE_NAME', 'healthcare_db'),
+        'USER': os.environ.get('DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
+    }
+}
 
 # Custom user model
 AUTH_USER_MODEL = 'accounts.User'
