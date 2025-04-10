@@ -341,8 +341,29 @@ class UserViewSet(viewsets.ModelViewSet):
             expires_at=expires_at
         )
 
-        # Here you would typically send an email with the code
-        # For the sake of this example, we'll just return the code
+        # Send the verification email
+        from django.core.mail import send_mail
+        from config.settings.base import DEFAULT_FROM_EMAIL
+
+        subject = "Verify your email address"
+        message = f"""
+            Hello {user.first_name or user.email},
+
+            Thank you for registering. Your verification code is: {code}
+
+            This code will expire in 30 minutes.
+
+            Thank you,
+            The Healthcare Team
+            """
+
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
 
         return code
 
