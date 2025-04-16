@@ -28,10 +28,9 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Custom permissions based on action.
         """
-        try:
-            return [permission() for permission in self.permission_classes]
-        except AttributeError:
-            return [IsAuthenticated()]
+        if self.action in ['create', 'login', 'request_password_reset', 'reset_password_confirm']:
+            return [AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
     def get_serializer_class(self):
         """
