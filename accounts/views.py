@@ -28,13 +28,10 @@ class UserViewSet(viewsets.ModelViewSet):
         """
         Custom permissions based on action.
         """
-        if self.action == 'create':
-            return [AllowAny()]
-        elif self.action in ['retrieve', 'update', 'partial_update']:
-            return [IsAuthenticated(), IsOwner()]
-        elif self.action == 'list':
-            return [IsAuthenticated(), IsAdmin()]
-        return [IsAuthenticated()]
+        try:
+            return [permission() for permission in self.permission_classes]
+        except AttributeError:
+            return [IsAuthenticated()]
 
     def get_serializer_class(self):
         """
@@ -68,11 +65,13 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED
         )
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'],  permission_classes=[AllowAny], authentication_classes=[])
     def login(self, request):
         """
         Custom login endpoint.
         """
+        print(f"permissions: ${self.get_permissions()}")
+
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -104,7 +103,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'],  permission_classes=[AllowAny], authentication_classes=[])
     def request_password_reset(self, request):
         """
         Request a password reset.
@@ -129,7 +128,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'message': 'Password reset email sent.'
             })
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'],permission_classes=[AllowAny], authentication_classes=[])
     def reset_password_confirm(self, request):
         """
         Confirm password reset with token.
@@ -355,7 +354,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
             Thank you,
             The Healthcare Team
-            """
+        """
 
         send_mail(
             subject=subject,
