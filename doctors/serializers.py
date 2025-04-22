@@ -148,7 +148,7 @@ class DoctorRegistrationSerializer(serializers.ModelSerializer):
         """
         Create a new doctor with a user account.
         """
-        from ..accounts.models import User
+        from accounts.models import User
 
         email = validated_data.pop('email')
         password = validated_data.pop('password')
