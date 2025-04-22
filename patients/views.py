@@ -17,6 +17,7 @@ from .filters import PatientFilter
 class PatientViewSet(viewsets.ModelViewSet):
     """
     ViewSet for viewing and editing Patient instances.
+    Provides CRUD operations with proper permission handling.
     """
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
@@ -30,58 +31,96 @@ class PatientViewSet(viewsets.ModelViewSet):
         """
         Instantiates and returns the list of permissions that this view requires.
         """
-        if self.action == 'create' or self.action == 'register':
-            permission_classes = [permissions.AllowAny]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
-            permission_classes = [permissions.IsAuthenticated, IsOwner | IsDoctorUser | IsAdminUser]
-        elif self.action == 'list':
-            permission_classes = [permissions.IsAuthenticated, IsDoctorUser | IsAdminUser]
-        else:
-            permission_classes = [permissions.IsAuthenticated]
+        permission_mapping = {
+            'create': [permissions.AllowAny],
+            'register': [permissions.AllowAny],
+            'retrieve': [permissions.IsAuthenticated, IsOwner | IsDoctorUser | IsAdminUser],
+            'update': [permissions.IsAuthenticated, IsOwner | IsDoctorUser | IsAdminUser],
+            'partial_update': [permissions.IsAuthenticated, IsOwner | IsDoctorUser | IsAdminUser],
+            'destroy': [permissions.IsAuthenticated, IsOwner | IsDoctorUser | IsAdminUser],
+            'list': [permissions.IsAuthenticated, IsDoctorUser | IsAdminUser],
+            'me': [permissions.IsAuthenticated, IsPatientUser],
+            # Default for any other actions
+            'default': [permissions.IsAuthenticated],
+        }
+
+        # Get permission classes for the current action or use default
+        permission_classes = permission_mapping.get(self.action, permission_mapping['default'])
         return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         """
         Return appropriate serializer class based on the action.
         """
-        if self.action == 'retrieve' or self.action == 'me':
-            return PatientDetailSerializer
-        elif self.action == 'register':
-            return PatientRegistrationSerializer
-        return self.serializer_class
+        serializer_mapping = {
+            'retrieve': PatientDetailSerializer,
+            'me': PatientDetailSerializer,
+            'register': PatientRegistrationSerializer,
+            # Default serializer for other actions
+            'default': PatientSerializer,
+        }
+
+        return serializer_mapping.get(self.action, serializer_mapping['default'])
 
     def get_queryset(self):
         """
         Filter queryset based on user permissions.
         """
-        queryset = self.queryset
         user = self.request.user
 
-        # Filter for patient (only see their own data)
+        # If not authenticated, return nothing (should be caught by permissions)
+        if not user.is_authenticated:
+            return Patient.objects.none()
+
+        # For admin users, return all patients
+        if user.is_staff:
+            return self.queryset
+
+        # For patient users, return only their own data
         if hasattr(user, 'patient'):
-            queryset = queryset.filter(user=user)
+            return self.queryset.filter(user=user)
 
-        # For doctor, show only associated patients
-        elif hasattr(user, 'doctor'):
-            # This assumes there's a way to link doctors to patients
-            # Either through appointments or another relationship
-            queryset = queryset.filter(appointments__doctor__user=user).distinct()
+        # For doctor users, return associated patients
+        if hasattr(user, 'doctor'):
+            # Use select_related or prefetch_related for better performance if needed
+            return self.queryset.filter(
+                appointments__doctor__user=user
+            ).distinct()
 
-        return queryset
+        # Default case: no results
+        return Patient.objects.none()
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny], authentication_classes=[])
     def register(self, request):
         """
         Register a new patient with a user account.
         """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        patient = serializer.save()
+        try:
+            serializer = self.get_serializer(data=request.data)
 
-        return Response(
-            PatientSerializer(patient).data,
-            status=status.HTTP_201_CREATED
-        )
+            if not serializer.is_valid():
+                return Response(
+                    serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            patient = serializer.save()
+
+            return Response(
+                PatientSerializer(patient).data,
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            # Log the error
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in patient registration: {str(e)}")
+
+            # Return a 500 response
+            return Response(
+                {"detail": "An error occurred during registration. Please try again."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated, IsPatientUser])
     def me(self, request):
@@ -94,10 +133,20 @@ class PatientViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Patient.DoesNotExist:
             return Response(
-                {'detail': 'Patient profile not found.'},
+                {'detail': 'Patient profile not found for this user.'},
                 status=status.HTTP_404_NOT_FOUND
             )
+        except Exception as e:
+            # Log the error
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error in patient me endpoint: {str(e)}")
 
+            # Return a 500 response
+            return Response(
+                {"detail": "An error occurred while retrieving your profile."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class PatientAddressViewSet(viewsets.ModelViewSet):
     """
